@@ -18,7 +18,8 @@ function Clue({
   baseValue, 
   selectedClue, 
   showAnswer, 
-  onClueSelect 
+  onClueSelect,
+  isFocused
 }) {
   // Determine if this clue is currently selected
   const isSelected = selectedClue?.category === category && selectedClue?.index === index;
@@ -37,7 +38,10 @@ function Clue({
   // Render answered clue content
   if (clueData?.answered) {
     return (
-      <div className={`clue-cell ${isSelected ? 'selected' : ''}`}>
+      <div 
+        className={`clue-cell ${isSelected ? 'selected' : ''}`}
+        tabIndex={isFocused ? 0 : -1}
+      >
         <div className="answered-clue">
           <div className="user-answer">{clueData.userAnswer}</div>
           {!clueData.correct && (
@@ -51,7 +55,11 @@ function Clue({
   // Render selected clue content
   if (isSelected) {
     return (
-      <div className={`clue-cell selected`} onClick={handleClick}>
+      <div 
+        className={`clue-cell selected`} 
+        onClick={handleClick}
+        tabIndex={isFocused ? 0 : -1}
+      >
         {clueData?.clue_text || 'No clue available'}
       </div>
     );
@@ -59,7 +67,11 @@ function Clue({
 
   // Render default clue value
   return (
-    <div className="clue-cell" onClick={handleClick}>
+    <div 
+      className={`clue-cell ${isFocused ? 'focused' : ''}`}
+      onClick={handleClick}
+      tabIndex={isFocused ? 0 : -1}
+    >
       ${clueData?.clue_value || baseValue}
     </div>
   );

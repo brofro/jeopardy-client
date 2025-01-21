@@ -120,6 +120,28 @@ h1 {
   cursor: default;
 }
 
+.clue-cell.focused {
+  position: relative;
+  animation: pulseFocus 1.5s infinite;
+  outline: 10px solid #ffcc00;
+  outline-offset: 2px;
+}
+
+@keyframes pulseFocus {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(255, 204, 0, 0.4);
+  }
+  50% {
+    transform: scale(1.02);
+    box-shadow: 0 0 0 4px rgba(255, 204, 0, 0);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(255, 204, 0, 0);
+  }
+}
+
 /* ClueDisplay component */
 .clue-display {
   position: fixed;
