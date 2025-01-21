@@ -30,6 +30,8 @@ function GameBoard({ roundData, getBaseValues, selectedClue, onClueSelect, showA
 
   // Find next unanswered clue starting from current position
   const findNextUnansweredClue = (currentPos, direction, roundData, boardDimensions) => {
+    if (!roundData) return currentPos;
+    
     const { rows, cols } = boardDimensions;
     const categories = Object.keys(roundData);
     
@@ -39,8 +41,11 @@ function GameBoard({ roundData, getBaseValues, selectedClue, onClueSelect, showA
     
     // Keep moving in the direction until we find an unanswered clue
     while (attempts < rows * cols) {
-      const clue = roundData[categories[pos.col]][pos.row];
-      if (!clue.answered) {
+      const category = categories[pos.col];
+      if (!category || !roundData[category]) return currentPos;
+      
+      const clue = roundData[category][pos.row];
+      if (clue && !clue.answered) {
         return pos;
       }
       pos = getNewPosition(pos, direction, boardDimensions);
@@ -62,7 +67,7 @@ function GameBoard({ roundData, getBaseValues, selectedClue, onClueSelect, showA
     if (!roundData || !lastDirection) return;
     
     const clue = roundData[Object.keys(roundData)[focusedClue.col]][focusedClue.row];
-    if (clue?.isAnswered) {
+    if (clue && clue.answered) {
       const boardDimensions = getBoardDimensions();
       const newPos = findNextUnansweredClue(focusedClue, lastDirection, roundData, boardDimensions);
       setFocusedClue(newPos);
@@ -80,7 +85,7 @@ function GameBoard({ roundData, getBaseValues, selectedClue, onClueSelect, showA
       if (key === 'enter') {
         const categories = Object.keys(roundData);
         const clue = roundData[categories[focusedClue.col]][focusedClue.row];
-        if (!clue.answered) {
+        if (clue && !clue.answered) {
           onClueSelect({
             category: categories[focusedClue.col],
             index: focusedClue.row,
