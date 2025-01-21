@@ -175,11 +175,6 @@ h1 {
   background-color: rgba(255, 255, 255, 0.3);
 }
 
-.clue-value {
-  font-size: min(4vh, 2em);
-  font-weight: bold;
-  margin-bottom: 2vh;
-}
 
 .clue-text {
   font-size: min(3.5vh, 1.6em);

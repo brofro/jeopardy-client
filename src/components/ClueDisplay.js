@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
+import './ClueDisplay.css';
 
-function ClueDisplay({ selectedClue, userAnswer, onAnswerChange, onSubmit, showAnswer, answerResponse, onClose }) {
+function ClueDisplay({ selectedClue, userAnswer, onAnswerChange, onSubmit, showAnswer, answerResponse, onClose, loading }) {
   const inputRef = useRef(null);
 
   useEffect(() => {
@@ -25,31 +26,42 @@ function ClueDisplay({ selectedClue, userAnswer, onAnswerChange, onSubmit, showA
   return (
     <div className="clue-display">
       <button className="close-btn" onClick={onClose}>&times;</button>
-      <div className="clue-value">
-        ${selectedClue.clue?.clue_value}
+      <div className="clue-header">
+        <div className="clue-value">
+          ${selectedClue.clue?.clue_value}
+        </div>
+        <div className="clue-category">
+          {selectedClue.category}
+        </div>
       </div>
       <div className="clue-text">
         {selectedClue.clue?.clue_text}
       </div>
       {!showAnswer ? (
         <div className="answer-input-section">
-            <input
-              ref={inputRef}
-              type="text"
-              value={userAnswer}
-              onChange={(e) => onAnswerChange(e.target.value)}
-              placeholder="Your answer..."
-              onKeyPress={(e) => {
-                if (e.key === 'Enter') {
-                  onSubmit();
-                }
-              }}
-            />
+          <input
+            ref={inputRef}
+            type="text"
+            value={userAnswer}
+            onChange={(e) => !loading && onAnswerChange(e.target.value)}
+            placeholder="Your answer..."
+            disabled={loading}
+            onKeyPress={(e) => {
+              if (e.key === 'Enter' && !loading && userAnswer?.trim()) {
+                onSubmit();
+              }
+            }}
+          />
           <button 
             className="submit-answer-btn"
             onClick={onSubmit}
+            disabled={loading || !userAnswer?.trim()}
           >
-            Submit Answer
+            {loading ? (
+              <div className="loading-spinner"></div>
+            ) : (
+              'Submit Answer'
+            )}
           </button>
         </div>
       ) : (
@@ -59,14 +71,16 @@ function ClueDisplay({ selectedClue, userAnswer, onAnswerChange, onSubmit, showA
           </div>
           {answerResponse && (
             <div 
-              className="levenshtein-distance"
+              className="answer-feedback"
               style={{ 
-                backgroundColor: answerResponse?.distance <= 33 ? 'rgb(255, 0, 0)' : 
-                                answerResponse?.distance <= 66 ? 'rgb(255, 255, 0)' :
-                                'rgb(0, 255, 0)'
+                backgroundColor: answerResponse?.correct ? 'rgb(0, 255, 0)' : 'rgb(255, 0, 0)'
               }}
             >
-              Your answer was {answerResponse?.distance || 0}% similar to the correct answer
+              {!answerResponse?.correct && (
+                <div className="correct-answer">
+                  Correct Answer: {answerResponse?.correct_answer}
+                </div>
+              )}
             </div>
           )}
         </div>

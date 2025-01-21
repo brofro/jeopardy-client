@@ -47,15 +47,13 @@ function App() {
   };
 
   const submitAnswer = async () => {
+    setLoading(true);
     try {
       const response = await axios.post('http://localhost:8000/answer', {
         clue_id: selectedClue.clue.id,
         user_answer: userAnswer
       });
-      setAnswerResponse({
-        ...response.data,
-        distance: response.data.similarity
-      });
+      setAnswerResponse(response.data);
       setShowAnswer(true);
       
       // Update the clue to mark it as answered
@@ -64,11 +62,15 @@ function App() {
         const clue = newData[selectedClue.category][selectedClue.index];
         clue.answered = true;
         clue.userAnswer = userAnswer;
+        clue.correct = response.data.correct;
+        clue.correct_answer = response.data.correct_answer;
         return newData;
       });
     } catch (error) {
       console.error('Error submitting answer:', error);
       setError(error.response?.data?.detail || error.message || 'Failed to submit answer');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -97,6 +99,7 @@ function App() {
             setSelectedClue(null);
             setShowAnswer(false);
           }}
+          loading={loading}
         />
       )}
       <GameBoard 

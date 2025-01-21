@@ -40,7 +40,9 @@ function Clue({
       <div className={`clue-cell ${isSelected ? 'selected' : ''}`}>
         <div className="answered-clue">
           <div className="user-answer">{clueData.userAnswer}</div>
-          <div className="correct-answer">{clueData?.correct_answer}</div>
+          {!clueData.correct && (
+            <div className="correct-answer">{clueData?.correct_answer}</div>
+          )}
         </div>
       </div>
     );
