@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './App.css';
 import GameBoard from './components/GameBoard';
@@ -14,6 +14,7 @@ function App() {
   const [userAnswer, setUserAnswer] = useState('');
   const [showAnswer, setShowAnswer] = useState(false);
   const [answerResponse, setAnswerResponse] = useState(null);
+  const [coryatScore, setCoryatScore] = useState(0);
 
   // Get base values based on round (Double Jeopardy doubles the values)
   const getBaseValues = () => {
@@ -55,6 +56,12 @@ function App() {
       });
       setAnswerResponse(response.data);
       setShowAnswer(true);
+      
+      // Update Coryat score
+      const clueValue = selectedClue.clue.clue_value || getBaseValues()[selectedClue.index];
+      setCoryatScore(prevScore => 
+        response.data.correct ? prevScore + clueValue : prevScore - clueValue
+      );
       
       // Update the clue to mark it as answered
       setRoundData(prevData => {
@@ -108,6 +115,7 @@ function App() {
         selectedClue={selectedClue}
         onClueSelect={handleClueSelect}
         showAnswer={showAnswer}
+        coryatScore={coryatScore}
       />
     </div>
   );

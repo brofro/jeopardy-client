@@ -10,7 +10,7 @@ import Clue from './Clue';
  * @param {Function} props.onClueSelect - Callback when a clue is selected
  * @param {boolean} props.showAnswer - Whether answer mode is active
  */
-function GameBoard({ roundData, getBaseValues, selectedClue, onClueSelect, showAnswer }) {
+function GameBoard({ roundData, getBaseValues, selectedClue, onClueSelect, showAnswer, coryatScore }) {
   const [focusedClue, setFocusedClue] = useState({ row: 0, col: 0 });
   const [lastDirection, setLastDirection] = useState(null);
 
@@ -104,7 +104,11 @@ function GameBoard({ roundData, getBaseValues, selectedClue, onClueSelect, showA
   }, [focusedClue, roundData, selectedClue, getBaseValues]);
 
   return (
-    <div className={`game-board ${selectedClue ? 'dimmed' : ''}`}>
+    <div className="game-board-container">
+      <div className="coryat-score">
+        Coryat Score: ${coryatScore}
+      </div>
+      <div className={`game-board ${selectedClue ? 'dimmed' : ''}`}>
       {roundData ? (
         <>
           {/* Row for category names */}
@@ -164,6 +168,7 @@ function GameBoard({ roundData, getBaseValues, selectedClue, onClueSelect, showA
           ))}
         </>
       )}
+      </div>
     </div>
   );
 }
