@@ -1,70 +1,55 @@
-# Getting Started with Create React App
+# Jeopardy Game - React Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project is the frontend for a Jeopardy game built using React.  It interacts with a backend API (assumed to be running at `http://localhost:8000`) to fetch and manage game data.
 
-## Available Scripts
+## Project Structure
 
-In the project directory, you can run:
+The project uses a component-based architecture. Key components include:
 
-### `npm start`
+* **`src/App.js`**: The main application component.  This component manages the overall game state, including:
+    * `roundData`: Stores the data for the current round, fetched from the backend API.  This data includes categories and clues.
+    * `currentRound`: Tracks the current round (1 or 2).
+    * `loading`: A boolean indicating whether data is currently being fetched.
+    * `error`: Stores any error messages encountered during API calls.
+    * `selectedClue`: Stores the currently selected clue.
+    * `userAnswer`: Stores the user's answer to the selected clue.
+    * `showAnswer`: A boolean indicating whether the correct answer should be displayed.
+    * `answerResponse`: Stores the response from the backend API after submitting an answer, including correctness and distance from the correct answer.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+    The `App` component fetches round data using `fetchNewRound`, handles clue selection with `handleClueSelect`, and submits answers with `submitAnswer`.  It renders the `GameBoard`, `GameControls`, and `ClueDisplay` components.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+* **`src/components/GameBoard.js`**: Displays the game board, showing categories and clue values.  It receives `roundData` and `getBaseValues` from `App.js` and handles clue selection using the `onClueSelect` callback.  It also receives `selectedClue` and `showAnswer` props to update its display based on the current game state.  The `getBaseValues` function determines the point values for clues based on the current round.
 
-### `npm test`
+* **`src/components/GameControls.js`**: Provides controls for the game, including round selection and a "New Round" button.  It receives `currentRound`, `onRoundChange`, `onNewRound`, `loading`, and `error` props from `App.js`.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+* **`src/components/Clue.js`**: (Assumed to be a child component of `GameBoard.js`)  This component likely renders a single clue on the game board.
 
-### `npm run build`
+* **`src/components/ClueDisplay.js`**: Displays the selected clue, the user's answer input, and the answer submission button.  It receives `selectedClue`, `userAnswer`, `onAnswerChange`, `onSubmit`, `showAnswer`, `answerResponse`, `onClose`, and `loading` props from `App.js`.  It handles updating the user's answer and submitting it to the backend API.  It also displays the answer response (correctness, etc.) and provides a mechanism to close the clue display.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## API Interaction
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+The frontend interacts with a backend API (presumably using Node.js and Express) at `http://localhost:8000`.  Endpoints include:
 
-### `npm run eject`
+* `/round/{roundNumber}`: Fetches data for a specific round.
+* `/answer`: Submits a user's answer for a given clue.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Technologies Used
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+* React
+* Axios (for API calls)
+* CSS (for styling)
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
-## Learn More
+## Running the App
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+1. Make sure you have Node.js and npm installed.
+2. Clone the repository.
+3. Navigate to the project directory.
+4. Run `npm install` to install dependencies.
+5. Ensure the backend API is running.
+6. Run `npm start` to start the development server.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
 
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+This README provides a high-level overview. For detailed information, refer to the code itself.
